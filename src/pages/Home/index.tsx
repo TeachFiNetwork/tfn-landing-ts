@@ -9,7 +9,7 @@ import { logout } from "@multiversx/sdk-dapp/utils";
 import { useInteraction } from "@/utils/Interaction.tsx";
 import BigNumber from "bignumber.js";
 import { getAddressTokens, getSwapFromOneApi } from "@/utils/api.ts";
-import { Token } from "@/utils/types.ts";
+import { SelectedToken, Token } from "@/utils/types.ts";
 import { createSwapOperations, formatNumber } from "@/utils/functions.tsx";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover.tsx";
 import { contracts, ONE } from "@/utils/config.ts";
@@ -20,13 +20,14 @@ export const Home = () => {
   const isLoggedIn = useGetIsLoggedIn();
   const navigate = useNavigate();
   const { callMethod } = useInteraction();
-  const [tokens, setTokens] = useState<Token[]>([]);
+  const [tokens, setTokens] = useState<SelectedToken[]>([]);
   const [searchTerm, setSearchTerm] = useState("");
   const [minBalanceFilter, setMinBalanceFilter] = useState<number>(100000);
+  const [selectedTokensForSwap, setSelectedTokensForSwap] = useState<SelectedToken[]>([]);
 
   useEffect(() => {
     (async () => {
-      const stateTokens: Array<Token> = [];
+      const stateTokens: Array<SelectedToken> = [];
       const tokens = await getAddressTokens(address);
       tokens.map((token: any) => {
         stateTokens.push({
@@ -36,6 +37,7 @@ export const Home = () => {
           ticker: token.ticker,
           valueUsd: token.valueUsd,
           pngUrl: token.assets?.pngUrl ?? "",
+          isSelected: false,
         });
       });
       setTokens(stateTokens);
@@ -54,25 +56,18 @@ export const Home = () => {
     return matchesSearch && matchesBalance;
   });
   console.log(tokens);
+
   const handleCreateStruct = async (identifier: string, balance: string) => {
     const firstResponseFromOneApi = await getSwapFromOneApi(
-      tokens[0].identifier,
+      tokens[2].identifier,
       ONE,
       new BigNumber(1).shiftedBy(18).toString(),
       address
     );
-    const secondResponseFromOneApi = await getSwapFromOneApi(
-      tokens[1].identifier,
-      ONE,
-      new BigNumber(0.01).shiftedBy(18).toString(),
-      address
-    );
 
     console.log(firstResponseFromOneApi);
-    console.log(secondResponseFromOneApi);
 
     const firstStructToSendToSc = await createSwapOperations(firstResponseFromOneApi);
-    const secondStructToSendToSc = await createSwapOperations(secondResponseFromOneApi);
 
     await callMethod({
       contract: contracts.DustConverter,
@@ -82,29 +77,38 @@ export const Home = () => {
         new TokenIdentifierValue(ONE),
         new U64Value(firstStructToSendToSc.length),
         ...firstStructToSendToSc,
-        new U64Value(secondStructToSendToSc.length),
-        ...secondStructToSendToSc,
       ],
       fts: [
         {
-          token: tokens[0].identifier,
+          token: tokens[2].identifier,
           amount: new BigNumber(firstResponseFromOneApi.amountIn).shiftedBy(-18),
-          decimals: 18,
-        },
-        {
-          token: tokens[1].identifier,
-          amount: new BigNumber(secondResponseFromOneApi.amountIn).shiftedBy(-18),
           decimals: 18,
         },
       ],
     });
   };
 
-  const handleSwap = async (tokenIn: string, tokenOut: string, amount: number) => {
-    await callMethod({
-      contract: contracts.DustConverter,
-      method: "convertDust",
-      // args: [new TokenIdentifierValue(ONE), [new U64Value()]],
+  const handleTokenClick = (token: SelectedToken) => {
+    setTokens((prevTokens) =>
+      prevTokens.map((t) =>
+        t.identifier === token.identifier ? { ...t, isSelected: !t.isSelected } : t
+      )
+    );
+
+    setSelectedTokensForSwap((prevTokens) => {
+      const tokenExists = prevTokens.some((t) => t.identifier === token.identifier);
+
+      if (tokenExists) {
+        return prevTokens.filter((t) => t.identifier !== token.identifier);
+      } else {
+        return [
+          ...prevTokens,
+          {
+            ...token,
+            isSelected: true,
+          },
+        ];
+      }
     });
   };
 
@@ -153,33 +157,44 @@ export const Home = () => {
           </PopoverContent>
         </Popover>
       </CardHeader>
-      <CardContent className="md:h-[calc(60vh-300px)] h-[calc(80vh-200px)] flex flex-col">
+      <CardContent className="md:h-[calc(70vh-300px)] h-[calc(80vh-200px)] flex flex-col">
         <div className="flex-1 overflow-y-auto pr-2">
           <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-3">
             {filteredTokens.map((token) => (
               <div
                 key={token.identifier}
-                onClick={() => handleCreateStruct(token.identifier, token.balance)}
-                className="group relative bg-[#252042]/30 rounded-lg p-4 cursor-pointer hover:bg-[#252042]/50 transition-all duration-300 border border-purple-900/20 hover:border-purple-500/30">
+                onClick={() => handleTokenClick(token)}
+                className={`group relative rounded-lg p-4 cursor-pointer transition-all duration-300 border
+                            ${
+                              token.isSelected
+                                ? "bg-[#252042]/60 border-purple-500/50"
+                                : "bg-[#252042]/30 border-purple-900/20 hover:bg-[#252042]/50 hover:border-purple-500/30"
+                            }`}>
                 <div
-                  className={`absolute inset-0 bg-gradient-to-br from-purple-500 to-fuchsia-600 opacity-0 group-hover:opacity-5 transition-opacity rounded-lg`}
+                  className={`absolute inset-0 bg-gradient-to-br from-purple-500 to-fuchsia-600 rounded-lg transition-opacity
+                            ${token.isSelected ? "opacity-10" : "opacity-0 group-hover:opacity-5"}`}
                 />
                 <div className="relative flex flex-col items-center gap-2">
                   {token.pngUrl !== "" ? (
                     <img
                       src={token.pngUrl}
                       alt={token.name}
-                      className={`w-10 h-10 rounded-full flex items-center justify-center shadow-lg group-hover:scale-110 transition-transform`}
+                      className={`w-10 h-10 rounded-full flex items-center justify-center shadow-lg transition-transform
+                                ${token.isSelected ? "scale-110" : "group-hover:scale-110"}`}
                     />
                   ) : (
                     <div
-                      className={`w-10 h-10 rounded-full bg-gradient-to-br from-purple-500 to-fuchsia-600 flex items-center justify-center shadow-lg group-hover:scale-110 transition-transform`}>
+                      className={`w-10 h-10 rounded-full bg-gradient-to-br from-purple-500 to-fuchsia-600 flex items-center justify-center shadow-lg transition-transform
+                                ${token.isSelected ? "scale-110" : "group-hover:scale-110"}`}>
                       <span className="text-white text-sm font-bold">{token.ticker.charAt(0)}</span>
                     </div>
                   )}
 
                   <div className="text-center">
-                    <div className="text-gray-200 font-medium">{token.name}</div>
+                    <div
+                      className={`font-medium ${token.isSelected ? "text-white" : "text-gray-200"}`}>
+                      {token.name}
+                    </div>
                     <div className="text-gray-400 text-xs">{token.ticker}</div>
                     <div className="text-gray-400 text-xs">
                       {formatNumber(
@@ -195,6 +210,31 @@ export const Home = () => {
             ))}
           </div>
         </div>
+        <div className="w-full border h-40 overflow-y-auto rounded-lg">
+          <p className="text-xl font-bold p-2.5">Selected Tokens</p>
+          <div className="flex justify-between px-2.5 font-medium border-b-2 text-slate-200">
+            <p>Coin</p>
+            <p>Amount</p>
+          </div>
+          {selectedTokensForSwap.map((selectedToken, index) => (
+            <div
+              className="flex justify-between px-2.5 text-base text-slate-300 border-b py-1"
+              key={index}>
+              <div className="flex items-center gap-2">
+                <img src={selectedToken.pngUrl} alt="logo" className="w-5 h-5" />
+                <p className="pr-3">{selectedToken.name}</p>
+              </div>
+              <p>
+                {formatNumber(
+                  BigNumber(selectedToken.balance)
+                    .dividedBy(10 ** 18)
+                    .toNumber(),
+                  16
+                )}
+              </p>
+            </div>
+          ))}
+        </div>
         {!isLoggedIn ? (
           <div className="flex justify-center mt-6">
             <Button
@@ -206,9 +246,9 @@ export const Home = () => {
         ) : (
           <div className="flex justify-center mt-6">
             <Button
-              onClick={() => logout()}
+              disabled={selectedTokensForSwap.length === 0}
               className="w-full bg-gradient-to-r from-purple-500 to-indigo-500 hover:from-purple-600 hover:to-indigo-600 text-white font-semibold py-6">
-              Disconnect
+              Swap
             </Button>
           </div>
         )}

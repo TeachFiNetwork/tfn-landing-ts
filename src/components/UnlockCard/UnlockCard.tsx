@@ -6,8 +6,6 @@ import {
   WebWalletLoginButton,
 } from "@multiversx/sdk-dapp/UI";
 import { useGetIsLoggedIn } from "@multiversx/sdk-dapp/hooks";
-import { useEffect } from "react";
-import { useNavigate } from "react-router-dom";
 
 export default function UnlockCard() {
   const isLoggedIn = useGetIsLoggedIn();

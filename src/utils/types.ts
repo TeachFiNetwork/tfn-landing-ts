@@ -57,6 +57,10 @@ export type Token = {
   pngUrl: string;
 };
 
+export type SelectedToken = Token & {
+  isSelected: boolean;
+};
+
 export enum SWAP_TYPE {
   fixedInput = 0,
   fixedOutput = 1,

@@ -65,6 +65,25 @@
   }
 }
 
+@layer utilities {
+  ::-webkit-scrollbar {
+    @apply w-2;
+  }
+
+  ::-webkit-scrollbar-track {
+    @apply bg-[#252042]/30 rounded;
+  }
+
+  ::-webkit-scrollbar-thumb {
+    @apply bg-purple-500/40 rounded hover:bg-purple-500/60;
+  }
+
+  * {
+    scrollbar-width: thin;
+    scrollbar-color: theme('colors.purple.500 / 0.4') theme('colors.purple.900 / 0.3');
+  }
+}
+
 @keyframes gradient-x {
   0%, 100% {
     background-position: 0% 50%;
@@ -79,11 +98,22 @@
   background-size: 300% 300%;
 }
 
-/*.dapp-core-component__transactionsToastList-styles__toasts,*/
 .dapp-core-component__transactionsToastList-styles__toastWrapper,
 .dapp-transaction-toast {
   @apply bg-[#252042]/30 text-blue-50 border !important;
 }
 .dapp-core-component__transactionToast-styles__close{
   @apply text-blue-50 !important;
+}
+
+.dapp-core-component__dappModalStyles__dappModalBody,
+.dapp-modal-dialog-content-body {
+  @apply bg-[#252042] text-blue-50 border border-purple-500/30 !important;
+}
+
+.dapp-core-component__dappModalStyles__dappModalContent {
+  @apply border-0;
+}
+.dapp-core-component__main__btn-dark {
+  @apply bg-gradient-to-r from-purple-500 to-indigo-500 hover:from-purple-600 hover:to-indigo-600 text-white !important;
 }
