@@ -4,7 +4,7 @@ export const isDev = true;
 
 export const contracts = {
   DustConverter: {
-    address: "erd1qqqqqqqqqqqqqpgqkj8ms9xk8ff9f74qmqe8dmte7s55kt9qtatsrr3f36",
+    address: "erd1qqqqqqqqqqqqqpgqc4sq2s8au263stwzprrynuzplcamteedtatsfw9gk8",
     abi: DustConverterAbi,
   },
   Wrap0: {

@@ -55,30 +55,45 @@ export const Home = () => {
   });
   console.log(tokens);
   const handleCreateStruct = async (identifier: string, balance: string) => {
-    const t = new BigNumber(1).shiftedBy(18).toString();
-    const responseFromOneApi = await getSwapFromOneApi(identifier, ONE, t, address);
-    console.log(responseFromOneApi);
-    const structToSendToSc = await createSwapOperations(responseFromOneApi);
-    console.log(structToSendToSc);
+    const firstResponseFromOneApi = await getSwapFromOneApi(
+      tokens[0].identifier,
+      ONE,
+      new BigNumber(1).shiftedBy(18).toString(),
+      address
+    );
+    const secondResponseFromOneApi = await getSwapFromOneApi(
+      tokens[1].identifier,
+      ONE,
+      new BigNumber(0.01).shiftedBy(18).toString(),
+      address
+    );
+
+    console.log(firstResponseFromOneApi);
+    console.log(secondResponseFromOneApi);
+
+    const firstStructToSendToSc = await createSwapOperations(firstResponseFromOneApi);
+    const secondStructToSendToSc = await createSwapOperations(secondResponseFromOneApi);
+
     await callMethod({
       contract: contracts.DustConverter,
       method: "convertDust",
+      gasLimit: "100000000",
       args: [
         new TokenIdentifierValue(ONE),
-        new U64Value(structToSendToSc.length),
-        ...structToSendToSc,
-        new U64Value(structToSendToSc.length),
-        ...structToSendToSc,
+        new U64Value(firstStructToSendToSc.length),
+        ...firstStructToSendToSc,
+        new U64Value(secondStructToSendToSc.length),
+        ...secondStructToSendToSc,
       ],
       fts: [
         {
-          token: identifier,
-          amount: 1,
+          token: tokens[0].identifier,
+          amount: new BigNumber(firstResponseFromOneApi.amountIn).shiftedBy(-18),
           decimals: 18,
         },
         {
-          token: identifier,
-          amount: 1,
+          token: tokens[1].identifier,
+          amount: new BigNumber(secondResponseFromOneApi.amountIn).shiftedBy(-18),
           decimals: 18,
         },
       ],
