@@ -14,7 +14,6 @@ export default defineConfig({
     port: Number(process.env.PORT) || 3000,
     strictPort: true,
     host: true,
-    https: true,
     watch: {
       usePolling: false,
       useFsEvents: false,

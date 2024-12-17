@@ -19,7 +19,7 @@ export const getSwapFromOneApi = async (
       tokenOutID: tokenOut,
       amountIn: amount,
       senderAddress: sender,
-      tolerance: 0.9,
+      tolerance: 0.01,
     },
     {
       headers: {
