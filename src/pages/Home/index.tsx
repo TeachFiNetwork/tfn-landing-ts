@@ -5,11 +5,10 @@ import { Input } from "@/components/ui/input";
 import { Search } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { useGetAccountInfo, useGetIsLoggedIn } from "@multiversx/sdk-dapp/hooks";
-import { logout } from "@multiversx/sdk-dapp/utils";
 import { useInteraction } from "@/utils/Interaction.tsx";
 import BigNumber from "bignumber.js";
 import { getAddressTokens, getSwapFromOneApi } from "@/utils/api.ts";
-import { SelectedToken, Token } from "@/utils/types.ts";
+import { SelectedToken } from "@/utils/types.ts";
 import { createSwapOperations, formatNumber } from "@/utils/functions.tsx";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover.tsx";
 import { contracts, ONE } from "@/utils/config.ts";
@@ -55,36 +54,39 @@ export const Home = () => {
         .toNumber() <= minBalanceFilter;
     return matchesSearch && matchesBalance;
   });
-  console.log(tokens);
+  // console.log(tokens);
 
-  const handleCreateStruct = async (identifier: string, balance: string) => {
-    const firstResponseFromOneApi = await getSwapFromOneApi(
-      tokens[2].identifier,
-      ONE,
-      new BigNumber(1).shiftedBy(18).toString(),
-      address
-    );
+  const handleCreateStruct = async (selectedTokens: SelectedToken[]) => {
+    const tokensPayment = selectedTokens.map((token) => {
+      return {
+        token: token.identifier,
+        amount: new BigNumber(token.balance).shiftedBy(-18).toString(),
+        decimals: 18,
+      };
+    });
 
-    console.log(firstResponseFromOneApi);
+    const structForSc: any = [new TokenIdentifierValue(ONE)];
 
-    const firstStructToSendToSc = await createSwapOperations(firstResponseFromOneApi);
+    for (let i = 0; i < selectedTokens.length; i++) {
+      const responseFromOneApi = await getSwapFromOneApi(
+        selectedTokens[i].identifier,
+        ONE,
+        new BigNumber(1).shiftedBy(18).toString(),
+        address
+      );
+      const structToSendToSc = await createSwapOperations(responseFromOneApi);
+      structForSc.push(new U64Value(structToSendToSc.length), ...structToSendToSc);
+    }
+
+    // const argsForCallSc = [new TokenIdentifierValue(ONE)];
+    console.log(structForSc);
 
     await callMethod({
       contract: contracts.DustConverter,
       method: "convertDust",
       gasLimit: "100000000",
-      args: [
-        new TokenIdentifierValue(ONE),
-        new U64Value(firstStructToSendToSc.length),
-        ...firstStructToSendToSc,
-      ],
-      fts: [
-        {
-          token: tokens[2].identifier,
-          amount: new BigNumber(firstResponseFromOneApi.amountIn).shiftedBy(-18),
-          decimals: 18,
-        },
-      ],
+      args: structForSc,
+      fts: tokensPayment,
     });
   };
 
@@ -246,6 +248,7 @@ export const Home = () => {
         ) : (
           <div className="flex justify-center mt-6">
             <Button
+              onClick={() => handleCreateStruct(selectedTokensForSwap)}
               disabled={selectedTokensForSwap.length === 0}
               className="w-full bg-gradient-to-r from-purple-500 to-indigo-500 hover:from-purple-600 hover:to-indigo-600 text-white font-semibold py-6">
               Swap

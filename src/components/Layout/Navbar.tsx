@@ -20,7 +20,8 @@ export const Navbar = () => {
             <div className="flex items-center gap-1">
               <WalletMinimal className="w-4 h-4" />
               <p>
-                {address.slice(0, 5)}...{address.slice(address.length - 5, address.length)}
+                {address && address.slice(0, 5)}...
+                {address.slice(address.length - 5, address.length)}
               </p>
             </div>
             <div className="flex justify-center">
