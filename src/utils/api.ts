@@ -1,8 +1,8 @@
-import { ElrondApiUrl, ONEDEX_AGGREGATOR_API } from "@/utils/config.ts";
+import { ElrondApiUrl, ONEDEX_AGGREGATOR_API, ONEDEX_API } from "@/utils/config.ts";
 import axios from "axios";
 
 export const getAddressTokens = async (address: string) => {
-  const response = await axios.get(`${ElrondApiUrl}/accounts/${address}/tokens`);
+  const response = await axios.get(`${ElrondApiUrl}/accounts/${address}/tokens?size=200`);
   return response.data;
 };
 
@@ -28,4 +28,15 @@ export const getSwapFromOneApi = async (
     }
   );
   return response.data;
+};
+
+export const getTokensFromOnedexApi = async () => {
+  const response = await axios.get(`${ONEDEX_AGGREGATOR_API}/tokens`);
+  return response.data;
+};
+
+export const getApi = (chainID: string) => {
+  const defaultUrl = chainID === "1" ? "api.multiversx.com" : "devnet-api.multiversx.com";
+
+  return defaultUrl;
 };

@@ -55,6 +55,7 @@ export type Token = {
   ticker: string;
   valueUsd: number;
   pngUrl: string;
+  decimals: number;
 };
 
 export type SelectedToken = Token & {

@@ -4,21 +4,28 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Search } from "lucide-react";
 import { useNavigate } from "react-router-dom";
-import { useGetAccountInfo, useGetIsLoggedIn } from "@multiversx/sdk-dapp/hooks";
+import {
+  useGetAccountInfo,
+  useGetIsLoggedIn,
+  useGetPendingTransactions,
+} from "@multiversx/sdk-dapp/hooks";
 import { useInteraction } from "@/utils/Interaction.tsx";
 import BigNumber from "bignumber.js";
-import { getAddressTokens, getSwapFromOneApi } from "@/utils/api.ts";
+import { getAddressTokens, getSwapFromOneApi, getTokensFromOnedexApi } from "@/utils/api.ts";
 import { SelectedToken } from "@/utils/types.ts";
 import { createSwapOperations, formatNumber } from "@/utils/functions.tsx";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover.tsx";
 import { contracts, ONE } from "@/utils/config.ts";
 import { TokenIdentifierValue, U64Value } from "@multiversx/sdk-core/out";
+import { Label } from "@/components/ui/label.tsx";
 
 export const Home = () => {
   const { address } = useGetAccountInfo();
+  const { hasPendingTransactions } = useGetPendingTransactions();
   const isLoggedIn = useGetIsLoggedIn();
   const navigate = useNavigate();
   const { callMethod } = useInteraction();
+  const maxBalance = 1000;
   const [tokens, setTokens] = useState<SelectedToken[]>([]);
   const [searchTerm, setSearchTerm] = useState("");
   const [minBalanceFilter, setMinBalanceFilter] = useState<number>(100000);
@@ -27,21 +34,30 @@ export const Home = () => {
   useEffect(() => {
     (async () => {
       const stateTokens: Array<SelectedToken> = [];
-      const tokens = await getAddressTokens(address);
-      tokens.map((token: any) => {
-        stateTokens.push({
-          balance: token.balance,
-          identifier: token.identifier,
-          name: token.name,
-          ticker: token.ticker,
-          valueUsd: token.valueUsd,
-          pngUrl: token.assets?.pngUrl ?? "",
-          isSelected: false,
-        });
+      const tokensFromsMVXApi = await getAddressTokens(address);
+      const tokensFromsOnedexApi = new Set<any>(
+        await getTokensFromOnedexApi().then((res) => res.map((token: any) => token.identifier))
+      );
+      // console.log(tokensFromsMVXApi, tokensFromsOnedexApi);
+
+      tokensFromsMVXApi.forEach((tokenMVX: any) => {
+        if (tokensFromsOnedexApi.has(tokenMVX.identifier)) {
+          stateTokens.push({
+            balance: tokenMVX.balance,
+            identifier: tokenMVX.identifier,
+            name: tokenMVX.name,
+            ticker: tokenMVX.ticker,
+            valueUsd: tokenMVX.valueUsd,
+            pngUrl: tokenMVX.assets?.pngUrl ?? "",
+            isSelected: false,
+            decimals: tokenMVX.decimals,
+          });
+        }
       });
+
       setTokens(stateTokens);
     })();
-  }, [address]);
+  }, [address, hasPendingTransactions]);
 
   const filteredTokens = tokens.filter((token) => {
     const matchesSearch =
@@ -133,6 +149,7 @@ export const Home = () => {
         <Popover>
           <PopoverTrigger asChild className="flex w-full justify-start">
             <Button
+              hidden={!isLoggedIn}
               className="md:w-[20dvw] !mt-3 bg-[#252042]/30 hover:bg-[#252042]/70 border hover:border-purple-500/30 transition-all duration-300 border-purple-900/30 text-gray-100"
               variant="default">
               Minimum Balance: {minBalanceFilter}
@@ -144,7 +161,7 @@ export const Home = () => {
             <div className="flex flex-col w-full">
               <div className="flex items-center justify-between">
                 <div className="text-gray-100">Minimum Balance</div>
-                <div className="text-gray-100 text-xs">≥ 100000</div>
+                <div className="text-gray-100 text-xs">≥ 0</div>
               </div>
               <Input
                 type="range"
@@ -154,12 +171,34 @@ export const Home = () => {
                 onChange={(e) => setMinBalanceFilter(parseInt(e.target.value))}
                 className="w-full mt-2"
               />
-              <div>{minBalanceFilter}</div>
+              <div className="flex flex-col items-start justify-center gap-1.5">
+                <Label htmlFor="balance">Min Balance</Label>
+                <Input
+                  id="balance"
+                  min={0}
+                  max={100000}
+                  type="number"
+                  value={minBalanceFilter}
+                  onChange={(e) => {
+                    if (parseInt(e.target.value) >= 0) {
+                      setMinBalanceFilter(parseInt(e.target.value));
+                    } else {
+                      setMinBalanceFilter(0);
+                    }
+                  }}
+                  className="w-full bg-[#0D0B1A] mr-0 mb-2"
+                />
+              </div>
+
+              <div className="flex items-center gap-1">
+                <p className="py-0">Current Min Balance</p>
+                <p className="text-slate-300 text-sm pt-0.5">{minBalanceFilter}</p>
+              </div>
             </div>
           </PopoverContent>
         </Popover>
       </CardHeader>
-      <CardContent className="md:h-[calc(70vh-300px)] h-[calc(80vh-200px)] flex flex-col">
+      <CardContent className="md:h-[calc(70vh-300px)] h-[calc(80vh-200px)] flex flex-col gap-2">
         <div className="flex-1 overflow-y-auto pr-2">
           <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-3">
             {filteredTokens.map((token) => (
@@ -201,7 +240,7 @@ export const Home = () => {
                     <div className="text-gray-400 text-xs">
                       {formatNumber(
                         BigNumber(token.balance)
-                          .dividedBy(10 ** 18)
+                          .dividedBy(10 ** token.decimals)
                           .toNumber(),
                         16
                       )}
@@ -212,8 +251,8 @@ export const Home = () => {
             ))}
           </div>
         </div>
-        <div className="w-full border h-40 overflow-y-auto rounded-lg">
-          <p className="text-xl font-bold p-2.5">Selected Tokens</p>
+        <div className="w-full border md:h-40 h-32 overflow-y-auto rounded-lg">
+          <p className="md:text-xl text-lg font-bold p-2.5">Selected Tokens</p>
           <div className="flex justify-between px-2.5 font-medium border-b-2 text-slate-200">
             <p>Coin</p>
             <p>Amount</p>
@@ -226,7 +265,7 @@ export const Home = () => {
                 <img src={selectedToken.pngUrl} alt="logo" className="w-5 h-5" />
                 <p className="pr-3">{selectedToken.name}</p>
               </div>
-              <p>
+              <p className="md:text-base text-sm">
                 {formatNumber(
                   BigNumber(selectedToken.balance)
                     .dividedBy(10 ** 18)

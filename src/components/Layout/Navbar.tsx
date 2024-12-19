@@ -8,7 +8,10 @@ import { WalletMinimal } from "lucide-react";
 export const Navbar = () => {
   const isLoggedIn = useGetIsLoggedIn();
   const { address } = useGetAccountInfo();
-  console.log(address);
+
+  const disconnectWallet = () => {
+    logout("/").then(() => window.location.reload());
+  };
   return (
     <nav className="fixed top-0 left-0 right-0 z-50 bg-transparent px-4 py-4">
       <div className="max-w-7xl mx-auto flex justify-between items-center">
@@ -27,7 +30,7 @@ export const Navbar = () => {
             <div className="flex justify-center">
               <Button
                 size="sm"
-                onClick={() => logout("/")}
+                onClick={() => disconnectWallet()}
                 className="w-full bg-gradient-to-r from-purple-500 to-indigo-500 hover:from-purple-600 hover:to-indigo-600 text-xs text-white font-semibold py-2">
                 Disconnect
               </Button>

@@ -21,5 +21,6 @@ export const contracts = {
 export const ElrondGatewayUrl = "https://devnet-gateway.multiversx.com";
 export const ElrondApiUrl = "https://devnet-api.multiversx.com";
 export const ONEDEX_AGGREGATOR_API = "https://devnet-aggregator.onedex.app";
+export const ONEDEX_API = "https://api.onedex.app";
 
 export const ONE = isDev ? "ONE-83a7c0" : "ONE-f9954f";

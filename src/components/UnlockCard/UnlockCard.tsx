@@ -5,17 +5,28 @@ import {
   WalletConnectLoginButton,
   WebWalletLoginButton,
 } from "@multiversx/sdk-dapp/UI";
-import { useGetIsLoggedIn } from "@multiversx/sdk-dapp/hooks";
+import { useGetIsLoggedIn, useGetNetworkConfig } from "@multiversx/sdk-dapp/hooks";
+import { NativeAuthConfigType } from "@multiversx/sdk-dapp/types";
+import { useLocation } from "react-router-dom";
+import { getApi } from "@/utils/api.ts";
 
 export default function UnlockCard() {
   const isLoggedIn = useGetIsLoggedIn();
-  // const navigate = useNavigate();
-  //
-  // useEffect(() => {
-  //   if (isLoggedIn) {
-  //     navigate("/");
-  //   }
-  // }, [isLoggedIn]);
+  const {
+    network: { chainId: chainID },
+  } = useGetNetworkConfig();
+
+  const nativeAuthProps: NativeAuthConfigType = {
+    apiAddress: `https://${getApi(chainID)}`,
+    expirySeconds: 3600,
+  };
+
+  const commonProps = {
+    nativeAuth: {
+      ...nativeAuthProps,
+    },
+    callbackRoute: "/",
+  };
 
   return (
     <motion.div
@@ -28,19 +39,19 @@ export default function UnlockCard() {
         </CardHeader>
         <CardContent className="flex flex-col space-y-4 gap-4">
           <ExtensionLoginButton
-            callbackRoute={"/"}
             className="!w-full !border-0 !m-0 bg-gradient-to-r from-purple-500 to-indigo-500 hover:from-purple-600 hover:to-indigo-600 text-white font-semibold py-6"
             loginButtonText={"Extension"}
+            {...commonProps}
           />
           <WalletConnectLoginButton
-            callbackRoute={"/"}
             className="!w-full !border-0 !m-0 bg-gradient-to-r from-purple-500 to-indigo-500 hover:from-purple-600 hover:to-indigo-600 text-white font-semibold py-6"
             loginButtonText={"xPortal"}
+            {...commonProps}
           />
           <WebWalletLoginButton
-            callbackRoute={"/"}
             className="!w-full !border-0 !m-0 bg-gradient-to-r from-purple-500 to-indigo-500 hover:from-purple-600 hover:to-indigo-600 text-white font-semibold py-6"
             loginButtonText={"Web wallet"}
+            {...commonProps}
           />
         </CardContent>
       </Card>
