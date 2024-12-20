@@ -1,4 +1,4 @@
-import { ElrondApiUrl, ONEDEX_AGGREGATOR_API, ONEDEX_API } from "@/utils/config.ts";
+import { ElrondApiUrl, isDev, ONEDEX_AGGREGATOR_API, ONEDEX_API } from "@/utils/config.ts";
 import axios from "axios";
 
 export const getAddressTokens = async (address: string) => {
@@ -19,7 +19,7 @@ export const getSwapFromOneApi = async (
       tokenOutID: tokenOut,
       amountIn: amount,
       senderAddress: sender,
-      tolerance: 0.01,
+      tolerance: isDev ? 0.99 : 0.01,
     },
     {
       headers: {
