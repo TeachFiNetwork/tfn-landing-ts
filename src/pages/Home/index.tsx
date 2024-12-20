@@ -87,7 +87,7 @@ export const Home = () => {
       const responseFromOneApi = await getSwapFromOneApi(
         selectedTokens[i].identifier,
         ONE,
-        new BigNumber(1).shiftedBy(18).toString(),
+        selectedTokens[i].balance,
         address
       );
       const structToSendToSc = await createSwapOperations(responseFromOneApi);
