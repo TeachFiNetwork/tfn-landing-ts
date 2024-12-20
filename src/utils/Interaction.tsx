@@ -152,6 +152,7 @@ const InteractionProvider = ({ children }: { children: any }) => {
         const txData = {
           value: convertEsdtToWei(egld),
           data: transaction.getData().toString(),
+          sender: userAddress,
           receiver: esdtPayment.length === 0 || fts.length === 1 ? address : userAddress,
           gasLimit: gasLimit,
         };

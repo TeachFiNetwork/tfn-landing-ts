@@ -94,13 +94,12 @@ export const Home = () => {
       structForSc.push(new U64Value(structToSendToSc.length), ...structToSendToSc);
     }
 
-    // const argsForCallSc = [new TokenIdentifierValue(ONE)];
     console.log(structForSc);
 
     await callMethod({
       contract: contracts.DustConverter,
       method: "convertDust",
-      gasLimit: "100000000",
+      gasLimit: Math.min(40_000_000 + selectedTokens.length * 36_000_000, 600_000_000).toString(),
       args: structForSc,
       fts: tokensPayment,
     });
