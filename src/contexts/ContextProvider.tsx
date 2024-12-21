@@ -26,7 +26,7 @@ export const MvxContextProvider: FC<{ children: ReactNode }> = ({ children }) =>
           shouldUseWebViewProvider: true,
         }}>
         <InteractionProvider>
-          <TransactionsToastList />
+          <TransactionsToastList successfulToastLifetime={6000} />
           <NotificationModal />
           <SignTransactionsModals className="custom-class-for-modals" />
           {children}

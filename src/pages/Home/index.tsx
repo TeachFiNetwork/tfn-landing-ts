@@ -34,27 +34,42 @@ export const Home = () => {
   useEffect(() => {
     (async () => {
       const stateTokens: Array<SelectedToken> = [];
-      const tokensFromsMVXApi = await getAddressTokens(address);
       const tokensFromsOnedexApi = new Set<any>(
         await getTokensFromOnedexApi().then((res) => res.map((token: any) => token.identifier))
       );
       // console.log(tokensFromsMVXApi, tokensFromsOnedexApi);
-
-      tokensFromsMVXApi.forEach((tokenMVX: any) => {
-        if (tokensFromsOnedexApi.has(tokenMVX.identifier)) {
+      if (address) {
+        const tokensFromsMVXApi = await getAddressTokens(address);
+        tokensFromsMVXApi.forEach((tokenMVX: any) => {
+          if (tokensFromsOnedexApi.has(tokenMVX.identifier) && tokenMVX.identifier !== ONE) {
+            stateTokens.push({
+              balance: tokenMVX.balance,
+              identifier: tokenMVX.identifier,
+              name: tokenMVX.name,
+              ticker: tokenMVX.ticker,
+              valueUsd: tokenMVX.valueUsd,
+              pngUrl: tokenMVX.assets?.pngUrl ?? "",
+              isSelected: false,
+              decimals: tokenMVX.decimals,
+            });
+          }
+        });
+      } else {
+        const tokensFromsOnedex = await getTokensFromOnedexApi();
+        console.log(tokensFromsOnedex);
+        tokensFromsOnedex.forEach((tokenOnedex: any) => {
           stateTokens.push({
-            balance: tokenMVX.balance,
-            identifier: tokenMVX.identifier,
-            name: tokenMVX.name,
-            ticker: tokenMVX.ticker,
-            valueUsd: tokenMVX.valueUsd,
-            pngUrl: tokenMVX.assets?.pngUrl ?? "",
+            balance: "0",
+            identifier: tokenOnedex.identifier,
+            name: tokenOnedex.name,
+            ticker: tokenOnedex.ticker,
+            valueUsd: tokenOnedex.valueUsd,
+            pngUrl: tokenOnedex.assets?.pngUrl ?? "",
             isSelected: false,
-            decimals: tokenMVX.decimals,
+            decimals: tokenOnedex.decimals,
           });
-        }
-      });
-
+        });
+      }
       setTokens(stateTokens);
     })();
   }, [address, hasPendingTransactions]);
@@ -102,7 +117,7 @@ export const Home = () => {
       gasLimit: Math.min(40_000_000 + selectedTokens.length * 36_000_000, 600_000_000).toString(),
       args: structForSc,
       fts: tokensPayment,
-    });
+    }).finally(() => setSelectedTokensForSwap([]));
   };
 
   const handleTokenClick = (token: SelectedToken) => {
@@ -198,7 +213,7 @@ export const Home = () => {
         </Popover>
       </CardHeader>
       <CardContent className="md:h-[calc(70vh-300px)] h-[calc(80vh-200px)] flex flex-col gap-2">
-        <div className="flex-1 overflow-y-auto pr-2">
+        <div className="flex-1 overflow-y-auto pr-2 min-h-80">
           <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-3">
             {filteredTokens.map((token) => (
               <div
@@ -237,12 +252,14 @@ export const Home = () => {
                     </div>
                     <div className="text-gray-400 text-xs">{token.ticker}</div>
                     <div className="text-gray-400 text-xs">
-                      {formatNumber(
-                        BigNumber(token.balance)
-                          .dividedBy(10 ** token.decimals)
-                          .toNumber(),
-                        16
-                      )}
+                      {token.balance !== "0"
+                        ? formatNumber(
+                            BigNumber(token.balance)
+                              .dividedBy(10 ** token.decimals)
+                              .toNumber(),
+                            16
+                          )
+                        : null}
                     </div>
                   </div>
                 </div>
@@ -267,7 +284,7 @@ export const Home = () => {
               <p className="md:text-base text-sm">
                 {formatNumber(
                   BigNumber(selectedToken.balance)
-                    .dividedBy(10 ** 18)
+                    .dividedBy(10 ** selectedToken.decimals)
                     .toNumber(),
                   16
                 )}
