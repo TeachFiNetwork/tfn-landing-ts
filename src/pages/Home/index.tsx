@@ -212,7 +212,7 @@ export const Home = () => {
           </PopoverContent>
         </Popover>
       </CardHeader>
-      <CardContent className="md:h-[calc(70vh-300px)] h-[calc(80vh-200px)] flex flex-col gap-2">
+      <CardContent className="h-[calc(80vh-200px)] flex flex-col gap-2">
         <div className="flex-1 overflow-y-auto pr-2 min-h-80">
           <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-3">
             {filteredTokens.map((token) => (
