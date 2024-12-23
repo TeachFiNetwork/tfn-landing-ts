@@ -12,7 +12,7 @@ export const MvxContextProvider: FC<{ children: ReactNode }> = ({ children }) =>
   const {
     network: { chainId: chainID },
   } = useGetNetworkConfig();
-  console.log("chainID", chainID);
+  // console.log("chainID", chainID);
   return (
     <>
       <DappProvider

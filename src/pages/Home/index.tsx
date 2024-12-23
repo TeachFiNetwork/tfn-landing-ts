@@ -56,7 +56,7 @@ export const Home = () => {
         });
       } else {
         const tokensFromsOnedex = await getTokensFromOnedexApi();
-        console.log(tokensFromsOnedex);
+        // console.log(tokensFromsOnedex);
         tokensFromsOnedex.forEach((tokenOnedex: any) => {
           stateTokens.push({
             balance: "0",
@@ -81,7 +81,7 @@ export const Home = () => {
     // const matchesCategory = !selectedCategory;
     const matchesBalance =
       BigNumber(token.balance)
-        .dividedBy(10 ** 18)
+        .dividedBy(10 ** token.decimals)
         .toNumber() <= minBalanceFilter;
     return matchesSearch && matchesBalance;
   });
@@ -121,6 +121,13 @@ export const Home = () => {
   };
 
   const handleTokenClick = (token: SelectedToken) => {
+    const isTokenSelected = selectedTokensForSwap.some((t) => t.identifier === token.identifier);
+
+    if (!isTokenSelected && selectedTokensForSwap.length >= 7) {
+      alert("Maximum of 7 tokens can be selected");
+      return;
+    }
+
     setTokens((prevTokens) =>
       prevTokens.map((t) =>
         t.identifier === token.identifier ? { ...t, isSelected: !t.isSelected } : t
@@ -260,7 +267,7 @@ export const Home = () => {
                             BigNumber(token.balance)
                               .dividedBy(10 ** token.decimals)
                               .toNumber(),
-                            16
+                            15
                           )
                         : null}
                     </div>
