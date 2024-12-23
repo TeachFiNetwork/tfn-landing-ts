@@ -100,7 +100,7 @@
 
 .dapp-core-component__transactionsToastList-styles__toastWrapper,
 .dapp-transaction-toast {
-  @apply bg-[#252042]/30 text-blue-50 border !important;
+  @apply bg-[#252042]/30 backdrop-blur-2xl text-blue-50 border !important;
 }
 .dapp-core-component__transactionToast-styles__close{
   @apply text-blue-50 !important;

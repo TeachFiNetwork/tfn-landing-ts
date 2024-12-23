@@ -6,21 +6,22 @@ import { TransactionsToastList } from "@multiversx/sdk-dapp/UI/TransactionsToast
 import { DappProvider } from "@multiversx/sdk-dapp/wrappers/DappProvider/DappProvider";
 import { apiTimeout, defaultUrl, ELROND_NETWORK, walletConnectV2ProjectId } from "../config.tsx";
 import { InteractionProvider } from "@/utils/Interaction.tsx";
+import { ElrondApiUrl } from "@/utils/config.ts";
 
 export const MvxContextProvider: FC<{ children: ReactNode }> = ({ children }) => {
   const {
     network: { chainId: chainID },
   } = useGetNetworkConfig();
-
+  console.log("chainID", chainID);
   return (
     <>
       <DappProvider
         environment={ELROND_NETWORK}
         customNetworkConfig={{
-          name: "mvxTemplate", //put your dapp name here
+          name: "DustConverter", //put your dapp name here
           apiTimeout,
           walletConnectV2ProjectId, //here you will have to create one
-          apiAddress: `https://${defaultUrl(chainID)}`,
+          apiAddress: ElrondApiUrl,
         }}
         dappConfig={{
           shouldUseWebViewProvider: true,

@@ -109,7 +109,7 @@ export const Home = () => {
       structForSc.push(new U64Value(structToSendToSc.length), ...structToSendToSc);
     }
 
-    console.log(structForSc);
+    // console.log(structForSc);
 
     await callMethod({
       contract: contracts.DustConverter,
@@ -198,6 +198,9 @@ export const Home = () => {
                       setMinBalanceFilter(parseInt(e.target.value));
                     } else {
                       setMinBalanceFilter(0);
+                    }
+                    if (parseInt(e.target.value) > 100000) {
+                      setMinBalanceFilter(100000);
                     }
                   }}
                   className="w-full bg-[#0D0B1A] mr-0 mb-2"

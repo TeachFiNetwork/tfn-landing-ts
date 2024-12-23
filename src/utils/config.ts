@@ -1,10 +1,10 @@
 import { DustConverterAbi } from "@/utils/abiConfig.ts";
 
-export const isDev = true;
+export const isDev = false;
 
 export const contracts = {
   DustConverter: {
-    address: "erd1qqqqqqqqqqqqqpgqc4sq2s8au263stwzprrynuzplcamteedtatsfw9gk8",
+    address: "erd1qqqqqqqqqqqqqpgqlkk9xgxqdxhqfja6fa57apuurfllvg887yqse5lvdr",
     abi: DustConverterAbi,
   },
   Wrap0: {
@@ -18,9 +18,15 @@ export const contracts = {
   },
 };
 
-export const ElrondGatewayUrl = "https://devnet-gateway.multiversx.com";
-export const ElrondApiUrl = "https://devnet-api.multiversx.com";
-export const ONEDEX_AGGREGATOR_API = "https://devnet-aggregator.onedex.app";
+export const ElrondGatewayUrl = isDev
+  ? "https://devnet-gateway.multiversx.com"
+  : "https://gateway.multiversx.com";
+export const ElrondApiUrl = isDev
+  ? "https://devnet-api.multiversx.com"
+  : "https://multiversx-api.beaconx.app/public-mainnet-api";
+export const ONEDEX_AGGREGATOR_API = isDev
+  ? "https://devnet-aggregator.onedex.app"
+  : "https://aggregator.onedex.app";
 export const ONEDEX_API = "https://api.onedex.app";
 
 export const ONE = isDev ? "ONE-83a7c0" : "ONE-f9954f";

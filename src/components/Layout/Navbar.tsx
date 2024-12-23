@@ -1,4 +1,4 @@
-import { NavLink } from "react-router-dom";
+import { NavLink, useNavigate } from "react-router-dom";
 import { useGetAccountInfo, useGetIsLoggedIn } from "@multiversx/sdk-dapp/hooks";
 import { Button } from "@/components/ui/button.tsx";
 import { logout } from "@multiversx/sdk-dapp/utils";
@@ -8,6 +8,7 @@ import { WalletMinimal } from "lucide-react";
 export const Navbar = () => {
   const isLoggedIn = useGetIsLoggedIn();
   const { address } = useGetAccountInfo();
+  const navigate = useNavigate();
 
   const disconnectWallet = () => {
     logout("/").then(() => window.location.reload());
@@ -18,7 +19,7 @@ export const Navbar = () => {
         <NavLink to={"/"}>
           <div className="text-white text-2xl font-[anton]">DustConverter</div>
         </NavLink>
-        {isLoggedIn && (
+        {isLoggedIn ? (
           <>
             <div className="flex items-center gap-1">
               <WalletMinimal className="w-4 h-4" />
@@ -36,6 +37,15 @@ export const Navbar = () => {
               </Button>
             </div>
           </>
+        ) : (
+          <div className="flex justify-center">
+            <Button
+              size="sm"
+              onClick={() => navigate("/unlock")}
+              className="w-full bg-gradient-to-r from-purple-500 to-indigo-500 hover:from-purple-600 hover:to-indigo-600 text-xs text-white font-semibold py-2">
+              Connect Wallet
+            </Button>
+          </div>
         )}
       </div>
     </nav>
