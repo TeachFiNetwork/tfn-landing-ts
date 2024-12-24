@@ -152,9 +152,9 @@ export const Home = () => {
   };
 
   return (
-    <Card className="w-full max-w-3xl bg-[#1A1830]/90 backdrop-blur-sm border-purple-900/20">
-      <CardHeader className="pb-3">
-        <CardTitle className="text-2xl font-bold text-gray-100 flex items-center gap-2">
+    <Card className="w-full max-w-3xl bg-[#1A1830]/90 min-h-[87dvh] md:min-h-0 backdrop-blur-sm border-purple-900/20 overflow-y-auto sm:mt-0 mt-8">
+      <CardHeader className="pb-3 px-6 pt-3">
+        <CardTitle className="md:text-2xl text-lg font-bold text-gray-100 flex items-center gap-2">
           <div className="w-2 h-2 rounded-full bg-purple-500 animate-pulse"></div>
           Select Token
         </CardTitle>
@@ -171,9 +171,9 @@ export const Home = () => {
           <PopoverTrigger asChild className="flex w-full justify-start">
             <Button
               hidden={!isLoggedIn}
-              className="md:w-[20dvw] !mt-3 bg-[#252042]/30 hover:bg-[#252042]/70 border hover:border-purple-500/30 transition-all duration-300 border-purple-900/30 text-gray-100"
+              className="md:w-[30%] sm:!mt-3 bg-[#252042]/30 hover:bg-[#252042]/70  border hover:border-purple-500/30 transition-all duration-300 border-purple-900/30 text-gray-100"
               variant="default">
-              Minimum Balance: {minBalanceFilter}
+              Maximum Balance: {minBalanceFilter}
             </Button>
           </PopoverTrigger>
           <PopoverContent
@@ -181,7 +181,7 @@ export const Home = () => {
             className="w-[20rem] bg-[#1A1830]/90 backdrop-blur-sm border py-6">
             <div className="flex flex-col w-full">
               <div className="flex items-center justify-between">
-                <div className="text-gray-100">Minimum Balance</div>
+                <div className="text-gray-100">Maximum Balance</div>
                 <div className="text-gray-100 text-xs">≥ 0</div>
               </div>
               <Input
@@ -193,7 +193,7 @@ export const Home = () => {
                 className="w-full mt-2"
               />
               <div className="flex flex-col items-start justify-center gap-1.5">
-                <Label htmlFor="balance">Min Balance</Label>
+                <Label htmlFor="balance">Max Balance</Label>
                 <Input
                   id="balance"
                   min={0}
@@ -222,14 +222,14 @@ export const Home = () => {
           </PopoverContent>
         </Popover>
       </CardHeader>
-      <CardContent className="h-[calc(80vh-200px)] flex flex-col gap-2">
+      <CardContent className=" h-[calc(80vh-200px)] flex flex-col gap-2">
         <div className="flex-1 overflow-y-auto pr-2 min-h-80">
-          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-3">
+          <div className="sm:grid flex flex-col grid-cols-2 sm:grid-cols-3 md:grid-cols-4 sm:gap-3 gap-1">
             {filteredTokens.map((token) => (
               <div
                 key={token.identifier}
                 onClick={() => handleTokenClick(token)}
-                className={`group relative rounded-lg p-4 cursor-pointer transition-all duration-300 border
+                className={`group relative rounded-lg sm:p-4 p-2 cursor-pointer transition-all duration-300 border
                             ${
                               token.isSelected
                                 ? "bg-[#252042]/60 border-purple-500/50"
@@ -239,17 +239,17 @@ export const Home = () => {
                   className={`absolute inset-0 bg-gradient-to-br from-purple-500 to-fuchsia-600 rounded-lg transition-opacity
                             ${token.isSelected ? "opacity-10" : "opacity-0 group-hover:opacity-5"}`}
                 />
-                <div className="relative flex flex-col items-center gap-2">
+                <div className="relative flex flex-col items-center md:gap-2 gap-0.5">
                   {token.pngUrl !== "" ? (
                     <img
                       src={token.pngUrl}
                       alt={token.name}
-                      className={`w-10 h-10 rounded-full flex items-center justify-center shadow-lg transition-transform
+                      className={`md:w-10 md:h-10 h-6 w-6 rounded-full flex items-center justify-center shadow-lg transition-transform
                                 ${token.isSelected ? "scale-110" : "group-hover:scale-110"}`}
                     />
                   ) : (
                     <div
-                      className={`w-10 h-10 rounded-full bg-gradient-to-br from-purple-500 to-fuchsia-600 flex items-center justify-center shadow-lg transition-transform
+                      className={`md:w-10 md:h-10 h-6 w-6 rounded-full bg-gradient-to-br from-purple-500 to-fuchsia-600 flex items-center justify-center shadow-lg transition-transform
                                 ${token.isSelected ? "scale-110" : "group-hover:scale-110"}`}>
                       <span className="text-white text-sm font-bold">{token.ticker.charAt(0)}</span>
                     </div>
@@ -277,8 +277,9 @@ export const Home = () => {
             ))}
           </div>
         </div>
-        <div className="w-full border md:h-40 h-32 overflow-y-auto rounded-lg">
-          <p className="md:text-xl text-lg font-bold p-2.5">Selected Tokens</p>
+
+        <div className="w-full border md:h-40 min-h-32 overflow-y-auto rounded-lg">
+          <p className="md:text-xl text-base font-bold p-2.5">Selected Tokens</p>
           <div className="flex justify-between px-2.5 font-medium border-b-2 text-slate-200">
             <p>Coin</p>
             <p>Amount</p>
@@ -288,7 +289,7 @@ export const Home = () => {
               className="flex justify-between px-2.5 text-base text-slate-300 border-b py-1"
               key={index}>
               <div className="flex items-center gap-2">
-                <img src={selectedToken.pngUrl} alt="logo" className="w-5 h-5" />
+                <img src={selectedToken.pngUrl} alt="logo" className="w-5 h-5 rounded-full" />
                 <p className="pr-3">{selectedToken.name}</p>
               </div>
               <p className="md:text-base text-sm">
@@ -296,26 +297,26 @@ export const Home = () => {
                   BigNumber(selectedToken.balance)
                     .dividedBy(10 ** selectedToken.decimals)
                     .toNumber(),
-                  16
+                  15
                 )}
               </p>
             </div>
           ))}
         </div>
         {!isLoggedIn ? (
-          <div className="flex justify-center mt-6">
+          <div className="flex justify-center mt-6 ">
             <Button
               onClick={() => navigate("/unlock")}
-              className="w-full bg-gradient-to-r from-purple-500 to-indigo-500 hover:from-purple-600 hover:to-indigo-600 text-white font-semibold py-6">
+              className="w-full bg-gradient-to-r from-purple-500 to-indigo-500 hover:from-purple-600 hover:to-indigo-600 text-white font-semibold md:py-6 !py-0">
               Connect Wallet
             </Button>
           </div>
         ) : (
-          <div className="flex justify-center mt-6">
+          <div className="flex justify-center sm:mt-6 sm:pb-0 pb-6">
             <Button
               onClick={() => handleCreateStruct(selectedTokensForSwap)}
               disabled={selectedTokensForSwap.length === 0}
-              className="w-full bg-gradient-to-r from-purple-500 to-indigo-500 hover:from-purple-600 hover:to-indigo-600 text-white font-semibold py-6">
+              className="w-full bg-gradient-to-r from-purple-500 to-indigo-500 hover:from-purple-600 hover:to-indigo-600 text-white font-semibold md:py-6 !py-0">
               Swap
             </Button>
           </div>

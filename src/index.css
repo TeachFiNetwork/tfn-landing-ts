@@ -112,8 +112,14 @@
 }
 
 .dapp-core-component__dappModalStyles__dappModalContent {
-  @apply border-0;
+  @apply border-0 rounded-sm !important;
 }
 .dapp-core-component__main__btn-dark {
   @apply bg-gradient-to-r from-purple-500 to-indigo-500 hover:from-purple-600 hover:to-indigo-600 text-white !important;
+}
+.dapp-core-component__walletConnectLoginContainerStyles__xPortal-pairing-button{
+  @apply bg-gradient-to-r from-purple-500 to-indigo-500 !important;
+}
+.dapp-core-component__walletConnectLoginContainerStyles__xPortal-modal-close-button{
+  @apply bg-[#252042] text-blue-50 !important;
 }
