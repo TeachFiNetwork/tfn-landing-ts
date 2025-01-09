@@ -21,7 +21,7 @@ export const Navbar = () => {
         </NavLink>
         {isLoggedIn ? (
           <>
-            <div className="flex items-center gap-1">
+            <div className="sm:flex hidden items-center gap-1">
               <WalletMinimal className="w-4 h-4" />
               <p>
                 {address && address.slice(0, 5)}...

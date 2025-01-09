@@ -5,14 +5,11 @@ import {
   WalletConnectLoginButton,
   WebWalletLoginButton,
 } from "@multiversx/sdk-dapp/UI";
-import { useGetIsLoggedIn, useGetNetworkConfig } from "@multiversx/sdk-dapp/hooks";
+import { useGetNetworkConfig } from "@multiversx/sdk-dapp/hooks";
 import { NativeAuthConfigType } from "@multiversx/sdk-dapp/types";
-import { useLocation, useNavigate } from "react-router-dom";
 import { getApi } from "@/utils/api.ts";
 
 export default function UnlockCard() {
-  const isLoggedIn = useGetIsLoggedIn();
-  const navigate = useNavigate();
   const {
     network: { chainId: chainID },
   } = useGetNetworkConfig();

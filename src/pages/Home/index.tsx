@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Search } from "lucide-react";
+import { Search, WalletMinimal } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import {
   useGetAccountInfo,
@@ -11,7 +11,12 @@ import {
 } from "@multiversx/sdk-dapp/hooks";
 import { useInteraction } from "@/utils/Interaction.tsx";
 import BigNumber from "bignumber.js";
-import { getAddressTokens, getSwapFromOneApi, getTokensFromOnedexApi } from "@/utils/api.ts";
+import {
+  getAddressTokens,
+  getPairs,
+  getSwapFromOneApi,
+  getTokensFromOnedexApi,
+} from "@/utils/api.ts";
 import { SelectedToken } from "@/utils/types.ts";
 import { createSwapOperations, formatNumber } from "@/utils/functions.tsx";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover.tsx";
@@ -30,6 +35,7 @@ export const Home = () => {
   const [searchTerm, setSearchTerm] = useState("");
   const [minBalanceFilter, setMinBalanceFilter] = useState<number>(100000);
   const [selectedTokensForSwap, setSelectedTokensForSwap] = useState<SelectedToken[]>([]);
+  const [pairs, setPairs] = useState<any[]>([]);
 
   useEffect(() => {
     (async () => {
@@ -54,6 +60,8 @@ export const Home = () => {
             });
           }
         });
+        const pairs = await getPairs();
+        setPairs(pairs);
       } else {
         const tokensFromsOnedex = await getTokensFromOnedexApi();
         // console.log(tokensFromsOnedex);
@@ -154,9 +162,18 @@ export const Home = () => {
   return (
     <Card className="w-full max-w-3xl bg-[#1A1830]/90 min-h-[87dvh] md:min-h-0 backdrop-blur-sm border-purple-900/20 overflow-y-auto sm:mt-0 mt-8">
       <CardHeader className="pb-3 px-6 pt-3">
-        <CardTitle className="md:text-2xl text-lg font-bold text-gray-100 flex items-center gap-2">
-          <div className="w-2 h-2 rounded-full bg-purple-500 animate-pulse"></div>
-          Select Token
+        <CardTitle className="md:text-2xl text-lg font-bold text-gray-100 flex items-center justify-between sm:justify-self-auto gap-2">
+          <div className="flex gap-2 items-center">
+            <div className="w-2 h-2 rounded-full bg-purple-500 animate-pulse"></div>
+            Select Token
+          </div>
+          <div className="flex sm:hidden items-center gap-1">
+            <WalletMinimal className="w-4 h-4" />
+            <p className="text-sm">
+              {address && address.slice(0, 5)}...
+              {address.slice(address.length - 5, address.length)}
+            </p>
+          </div>
         </CardTitle>
         <div className="relative mt-4">
           <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-4 w-4" />
