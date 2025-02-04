@@ -3,21 +3,33 @@ import { Navbar } from "./components/Layout/Navbar.tsx";
 import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 import { MvxContextProvider } from "./contexts/ContextProvider.tsx";
 import { routes } from "./routes.ts";
+import { Home } from "./pages/Home/index.tsx";
+import { Footer } from "./components/Layout/Footer.tsx";
 
 function App() {
   return (
     <Router>
-      <div className="min-h-screen flex flex-col items-center justify-center relative overflow-hidden">
-        <div className="min-h-screen bg-[#0D0B1A] w-full flex items-center justify-center p-4">
-          <Navbar />
-          <MvxContextProvider>
+      <div className="flex flex-col min-h-screen bg-background">
+        <Navbar />
+        <MvxContextProvider>
+          <main className="flex-grow flex">
             <Routes>
+              <Route path="/" element={<Home />} />
               {routes.map((route, index) => (
-                <Route path={route.path} key={index} element={<route.component />} />
+                <Route
+                  path={route.path}
+                  key={index}
+                  element={
+                    <div className="flex-grow flex items-center justify-center">
+                      <route.component />
+                    </div>
+                  }
+                />
               ))}
             </Routes>
-          </MvxContextProvider>
-        </div>
+          </main>
+        </MvxContextProvider>
+        <Footer />
       </div>
     </Router>
   );

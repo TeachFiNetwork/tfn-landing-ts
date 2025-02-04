@@ -31,23 +31,25 @@ export default function UnlockCard() {
       initial={{ opacity: 0, scale: 0.5 }}
       animate={{ opacity: 1, scale: 1 }}
       transition={{ duration: 0.5 }}>
-      <Card className="w-[300px] bg-[#0D0B1A] shadow-inner shadow-purple-300">
+      <Card className="w-[300px] bg-slate-200/50 backdrop-blur-sm">
         <CardHeader>
-          <CardTitle className="text-2xl font-bold text-center text-white">Choose Wallet</CardTitle>
+          <CardTitle className="text-2xl font-bold text-center text-[#00394F]">
+            Choose Wallet
+          </CardTitle>
         </CardHeader>
         <CardContent className="flex flex-col space-y-4 gap-4">
           <ExtensionLoginButton
-            className="!w-full !border-0 !m-0 bg-gradient-to-r from-purple-500 to-indigo-500 hover:from-purple-600 hover:to-indigo-600 text-white font-semibold py-6"
+            className="!w-full !border-0 !m-0 bg-[#00394F] hover:bg-[#00394F]/90 text-white font-semibold py-6"
             loginButtonText={"Extension"}
             {...commonProps}
           />
           <WalletConnectLoginButton
-            className="!w-full !border-0 !m-0 bg-gradient-to-r from-purple-500 to-indigo-500 hover:from-purple-600 hover:to-indigo-600 text-white font-semibold py-6"
+            className="!w-full !border-0 !m-0 bg-[#00394F] hover:bg-[#00394F]/90 text-white font-semibold py-6"
             loginButtonText={"xPortal"}
             {...commonProps}
           />
           <WebWalletLoginButton
-            className="!w-full !border-0 !m-0 bg-gradient-to-r from-purple-500 to-indigo-500 hover:from-purple-600 hover:to-indigo-600 text-white font-semibold py-6"
+            className="!w-full !border-0 !m-0 bg-[#00394F] hover:bg-[#00394F]/90 text-white font-semibold py-6"
             loginButtonText={"Web wallet"}
             {...commonProps}
           />

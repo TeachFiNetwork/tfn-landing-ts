@@ -5,6 +5,12 @@ import { Unlock } from "./pages/Unlock";
 export const routeNames = {
   home: "/",
   unlock: "/unlock",
+  // vision: "/vision",
+  // statistics: "/statistics",
+  // partners: "/partners",
+  // team: "/team",
+  // about: "/about",
+  // applications: "/applications",
 };
 
 interface RouteWithTitleType extends RouteType {

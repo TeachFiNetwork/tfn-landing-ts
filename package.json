@@ -10,10 +10,12 @@
     "preview": "vite preview"
   },
   "dependencies": {
-    "@multiversx/sdk-core": "13.15.0",
-    "@multiversx/sdk-dapp": "3.0.18",
+    "@multiversx/sdk-core": "13.17.1",
+    "@multiversx/sdk-dapp": "3.2.1",
+    "@radix-ui/react-avatar": "^1.1.2",
     "@radix-ui/react-label": "^2.1.1",
     "@radix-ui/react-popover": "^1.1.2",
+    "@radix-ui/react-separator": "^1.1.1",
     "@radix-ui/react-slot": "1.1.0",
     "axios": "1.7.9",
     "bignumber.js": "9.1.2",

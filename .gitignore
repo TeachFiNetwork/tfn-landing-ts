@@ -12,19 +12,24 @@ dist
 dist-ssr
 *.local
 
+# misc
+.DS_Store
+*.pem
+._*
+.AppleDouble
+
 # Editor directories and files
 .vscode/*
 !.vscode/extensions.json
 .idea
-.DS_Store
 *.suo
 *.ntvs*
 *.njsproj
 *.sln
 *.sw?
 
-bun.lockb
 package-lock.json
 .env
 
 build
+.idea/
