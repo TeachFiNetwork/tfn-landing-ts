@@ -5,7 +5,6 @@ import { SignTransactionsModals } from "@multiversx/sdk-dapp/UI/SignTransactions
 import { TransactionsToastList } from "@multiversx/sdk-dapp/UI/TransactionsToastList/TransactionsToastList";
 import { DappProvider } from "@multiversx/sdk-dapp/wrappers/DappProvider/DappProvider";
 import { apiTimeout, defaultUrl, ELROND_NETWORK, walletConnectV2ProjectId } from "../config.tsx";
-import { InteractionProvider } from "@/utils/Interaction.tsx";
 import { ElrondApiUrl } from "@/utils/config.ts";
 
 export const MvxContextProvider: FC<{ children: ReactNode }> = ({ children }) => {
@@ -26,12 +25,10 @@ export const MvxContextProvider: FC<{ children: ReactNode }> = ({ children }) =>
         dappConfig={{
           shouldUseWebViewProvider: true,
         }}>
-        <InteractionProvider>
-          <TransactionsToastList successfulToastLifetime={6000} />
-          <NotificationModal />
-          <SignTransactionsModals className="custom-class-for-modals" />
-          {children}
-        </InteractionProvider>
+        <TransactionsToastList successfulToastLifetime={6000} />
+        <NotificationModal />
+        <SignTransactionsModals className="custom-class-for-modals" />
+        {children}
       </DappProvider>
     </>
   );
