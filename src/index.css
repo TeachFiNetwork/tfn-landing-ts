@@ -64,28 +64,14 @@
     @apply border-border;
   }
   body {
-      @apply bg-white text-foreground;
+      @apply w-full m-0 bg-white text-foreground;
   }
 }
-
-@layer utilities {
-  /* ::-webkit-scrollbar {
-    @apply w-2;
-  }
-
-  ::-webkit-scrollbar-track {
-    @apply bg-[#252042]/30 rounded;
-  }
-
-  ::-webkit-scrollbar-thumb {
-    @apply bg-purple-500/40 rounded hover:bg-purple-500/60;
-  } */
 
   * {
     scrollbar-width: thin;
     scrollbar-color: theme('colors.teal.700 / 0.4') theme('colors.teal.900 / 0.3');
   }
-}
 
 @keyframes gradient-x {
   0%, 100% {

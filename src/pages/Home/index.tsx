@@ -10,27 +10,45 @@ import multiversx from "@/assets/appImg/multiversx.png";
 import { teamMembers } from "@/utils/persons";
 import { Card, CardContent } from "@/components/ui/card";
 import { Avatar, AvatarFallback, AvatarImage } from "@radix-ui/react-avatar";
+import { useIsMobile } from "@/lib/utils";
 
 export function Home() {
+  const isMobile = useIsMobile();
   return (
     <div className="container mx-auto px-4 py-8 space-y-16">
       {/* Hero Section */}
       <div className="max-w-[1400px] mx-auto">
         <section
           id="home"
-          className="flex flex-col-reverse md:flex-row items-center justify-between gap-8 min-h-[80vh]">
+          className="flex flex-col md:flex-row items-center justify-between gap-8 min-h-[80vh] md:pt-0 pt-20">
           <div className="flex-1 space-y-6">
             <h1 className="space-y-2">
-              <span className="text-4xl md:text-6xl font-medium bg-gradient-to-r from-[#20b3a7] to-[#055370] bg-clip-text text-transparent block">
-                Decentralized Education
-              </span>
-              <span className="text-4xl md:text-6xl font-medium block">for a Better Tomorrow</span>
+              {isMobile ? (
+                <>
+                  <span className="text-4xl md:text-6xl font-medium block">Empowering</span>
+                  <span className="flex gap-2 flex-wrap text-4xl md:text-6xl font-medium bg-gradient-to-r from-[#1ECDBE] to-[#95A1E5] bg-clip-text text-transparent">
+                    Innovation
+                    <span className="text-black text-4xl md:text-6xl font-medium block">
+                      for the Future
+                    </span>
+                  </span>
+                </>
+              ) : (
+                <>
+                  <span className="text-4xl md:text-6xl font-medium bg-gradient-to-r from-[#20b3a7] to-[#055370] bg-clip-text text-transparent block">
+                    Decentralized Education
+                  </span>
+                  <span className="text-4xl md:text-6xl font-medium block">
+                    for a Better Tomorrow
+                  </span>
+                </>
+              )}
             </h1>
             <p className="text-muted-foreground text-lg font-light max-w-xl tracking-wide">
               Empowering schools, teachers, and students with blockchain technology to build a
               transparent, sustainable, and innovative education system for generations to come.
             </p>
-            <Button size="lg" variant="outline">
+            <Button size="lg" variant="outline" className="md:w-auto w-full">
               <CirclePlay className="!w-5 !h-5" />
               Play Video
             </Button>
@@ -68,14 +86,68 @@ export function Home() {
       {/* Problems Section */}
       <section id="problems" className="space-y-12 max-w-7xl mx-auto">
         <h2 className="text-3xl font-semibold text-center">Problems we Solve</h2>
-        <div className="relative flex justify-center items-center min-h-[600px]">
+        <div className="relative flex justify-center items-center min-h-[600px] md:min-h-[600px]">
           {/* Center Image */}
-          <div className="absolute top-0 translate-x-14 w-[500px]">
+          <div className="absolute hidden md:block top-0 w-[500px]">
             <img src={glassFromProblem} alt="Books" className="w-5/6" />
           </div>
 
-          {/* Left Problems */}
-          <div className="absolute left-0 top-0 space-y-20 text-left w-[320px]">
+          {/* Mobile Layout */}
+          <div className="flex flex-col md:hidden w-full gap-8 px-4">
+            <div className="space-y-3">
+              <div className="bg-[#D9E7EC] w-9 h-9 rounded-full flex items-center justify-center">
+                <WalletMinimal className="w-4 h-4 text-[#00394F]" />
+              </div>
+              <h3 className="text-lg font-medium">Inefficient Resource Allocation</h3>
+              <p className="text-sm text-muted-foreground">
+                Traditional education systems struggle with bureaucracy, delaying funds where
+                they're needed most. TeachFi ensures that financial resources reach schools and
+                programs directly, improving their impact.
+              </p>
+            </div>
+
+            <div className="space-y-3">
+              <div className="bg-[#D9E7EC] w-9 h-9 rounded-full flex items-center justify-center">
+                <Glasses className="w-4 h-4 text-[#00394F]" />
+              </div>
+              <h3 className="text-lg font-medium">Teacher Undercompensation</h3>
+              <p className="text-sm text-muted-foreground">
+                Educators often face delayed or insufficient payments. With our automated systems,
+                teachers receive timely and fair compensation, motivating them to excel in their
+                roles.
+              </p>
+            </div>
+
+            <div className="space-y-3">
+              <div className="bg-[#D9E7EC] w-9 h-9 rounded-full flex items-center justify-center">
+                <Cpu className="w-4 h-4 text-[#00394F]" />
+              </div>
+              <h3 className="text-lg font-medium">Limited Access to Quality Funding</h3>
+              <p className="text-sm text-muted-foreground">
+                Many schools lack the tools to attract and manage necessary funds. Through tokenized
+                ecosystems, TeachFi enables schools to raise capital effectively for growth and
+                development.
+              </p>
+            </div>
+
+            <div className="space-y-3">
+              <div className="bg-[#D9E7EC] w-9 h-9 rounded-full flex items-center justify-center">
+                <LockKeyhole className="w-4 h-4 text-[#00394F]" />
+              </div>
+              <h3 className="text-lg font-medium">Unverifiable Student Credentials</h3>
+              <p className="text-sm text-muted-foreground">
+                Paper-based certificates and transcripts are prone to loss or forgery. TeachFi
+                digitizes student achievements on a secure platform, ensuring they can be accessed
+                and trusted throughout their lives.
+              </p>
+            </div>
+            {/* <div className="md:hidden top-0 w-full"> */}
+            <img src={glassFromProblem} alt="Books" className="md:hidden w-full" />
+            {/* </div> */}
+          </div>
+
+          {/* Desktop Layout - Left Problems */}
+          <div className="absolute hidden md:block left-0 top-0 space-y-20 text-left w-[320px]">
             <div className="space-y-3">
               <div className="bg-[#D9E7EC] w-9 h-9 rounded-full flex items-center justify-center">
                 <WalletMinimal className="w-4 h-4 text-[#00394F]" />
@@ -105,8 +177,8 @@ export function Home() {
             </div>
           </div>
 
-          {/* Right Problems */}
-          <div className="absolute right-0 top-0 space-y-20 text-right w-[300px]">
+          {/* Desktop Layout - Right Problems */}
+          <div className="absolute hidden md:block right-0 top-0 space-y-20 text-right w-[300px]">
             <div className="space-y-3">
               <div className="ml-auto bg-[#D9E7EC] w-9 h-9 rounded-full flex items-center justify-center">
                 <Cpu className="w-4 h-4 text-[#00394F]" />
@@ -139,26 +211,26 @@ export function Home() {
       </section>
 
       {/* Impact Tracker Section */}
-      <section id="impact" className="space-y-8 text-center max-w-4xl mx-auto">
+      <section id="impact" className="space-y-8 text-center max-w-full">
         <h2 className="text-4xl font-semibold">Impact Tracker</h2>
         <p className="text-muted-foreground text-lg">
           In a world where creativity meets technology, we provide the tools to craft stunning
           interfaces and exceptional products.
         </p>
-        <div className="flex justify-center items-center gap-16 mt-12">
+        <div className="flex md:flex-row flex-col justify-center items-center gap-16 mt-12">
           <div className="text-center">
             <h3 className="text-5xl font-bold text-[#00394F]">25+</h3>
             <p className="text-muted-foreground">Franchises</p>
           </div>
 
-          <Separator orientation="vertical" className="bg-black/10 w-[0.1px] h-16" />
+          <Separator orientation="vertical" className="bg-black/10 w-[0.1px] h-16 md:flex hidden" />
 
           <div className="text-center">
             <h3 className="text-5xl font-bold text-[#00394F]">1,250</h3>
             <p className="text-muted-foreground">Students</p>
           </div>
 
-          <Separator orientation="vertical" className="bg-black/10 w-[0.1px] h-16" />
+          <Separator orientation="vertical" className="bg-black/10 w-[0.1px] h-16 md:flex hidden" />
 
           <div className="text-center">
             <h3 className="text-5xl font-bold text-[#00394F]">548</h3>
@@ -167,13 +239,13 @@ export function Home() {
         </div>
       </section>
 
-      <section id="partners" className="bg-[#E6EFF3] py-10 px-4 rounded-lg">
+      <section id="partners" className="bg-[#E6EFF3] py-10 px-4 rounded-lg w-full">
         <div className="w-full flex flex-col justify-center items-center">
           <h6>Partners</h6>
-          <div className="flex w-full justify-center items-center gap-8">
+          <div className="flex md:flex-row flex-wrap w-full justify-center items-center gap-8">
             <img src={britishSchool} alt="britishSchool" />
-            <img src={stakingAgency} alt="britishSchool" className="w-[10rem] h-[2rem]" />
-            <img src={multiversx} alt="britishSchool" className="w-[9rem] h-[1.5rem]" />
+            <img src={stakingAgency} alt="britishSchool" className="md:w-[10rem] md:h-[2rem]" />
+            <img src={multiversx} alt="britishSchool" className=" md:w-[9rem] md:h-[1.5rem]" />
           </div>
         </div>
       </section>

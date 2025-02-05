@@ -5,14 +5,14 @@ import logo from "@/assets/Logo.png";
 export const Footer = () => {
   return (
     <footer className="bg-[#1C2024] text-white py-8">
-      <div className="container mx-auto px-4">
-        <div className="flex flex-col items-center gap-12">
+      <div className="px-4">
+        <div className="flex flex-col items-center gap-8 md:gap-12">
           {/* Logo */}
           <img src={logo} alt="TeachFi" className="h-8" />
 
           {/* Navigation */}
           <nav>
-            <ul className="flex gap-8 text-sm">
+            <ul className="flex flex-wrap gap-3 md:gap-8 text-sm">
               <li>
                 <a href="#home" className="hover:text-gray-300">
                   Home

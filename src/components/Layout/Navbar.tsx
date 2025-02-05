@@ -14,7 +14,7 @@ export const Navbar = () => {
     logout("/").then(() => window.location.reload());
   };
   const navItems = [
-    { label: "Home", href: "/home" },
+    { label: "Home", href: "/" },
     { label: "Vision", href: "#vision" },
     { label: "Statistics", href: "#impact" },
     { label: "Partners", href: "#partners" },
@@ -34,7 +34,7 @@ export const Navbar = () => {
     <nav className="fixed top-0 left-0 right-0 z-50 bg-white/80 backdrop-blur-sm border-b">
       <div className="container mx-auto px-4 py-4">
         <div className="flex items-center justify-between max-w-[1400px] mx-auto">
-          <a href="/home" className="flex items-center">
+          <a href="/" className="flex items-center">
             <img src={logo} alt="TeachFi" />
           </a>
 
@@ -44,8 +44,10 @@ export const Navbar = () => {
                 key={index}
                 href={item.href}
                 onClick={(e) => {
-                  e.preventDefault();
-                  scrollToSection(item.href);
+                  if (item.href !== "/") {
+                    e.preventDefault();
+                    scrollToSection(item.href);
+                  }
                 }}
                 className="text-sm font-medium transition-colors hover:text-teal-600 text-slate-600">
                 {item.label}
