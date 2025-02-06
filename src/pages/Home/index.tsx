@@ -88,7 +88,7 @@ export function Home() {
         <h2 className="text-3xl font-semibold text-center">Problems we Solve</h2>
         <div className="relative flex justify-center items-center min-h-[600px] md:min-h-[600px]">
           {/* Center Image */}
-          <div className="absolute hidden md:block top-0 w-[500px]">
+          <div className="absolute hidden md:block top-0 translate-x-20 w-[500px]">
             <img src={glassFromProblem} alt="Books" className="w-5/6" />
           </div>
 
