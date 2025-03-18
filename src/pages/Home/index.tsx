@@ -1,19 +1,27 @@
 import glassFromProblem from "@/assets/appImg/glassFromProblems.png";
 import guySvg from "@/assets/appImg/landingGuy.png";
+import multiversx from "@/assets/appImg/multiversx.png";
 import missionImg from "@/assets/appImg/ourMissionImg.png";
-import { Button } from "@/components/ui/button";
-import { Separator } from "@radix-ui/react-separator";
-import { CirclePlay, Cpu, Glasses, LockKeyhole, Star, WalletMinimal } from "lucide-react";
 import britishSchool from "@/assets/appImg/ScoalaRomanoBritanica.png";
 import stakingAgency from "@/assets/appImg/stakingAgency.png";
-import multiversx from "@/assets/appImg/multiversx.png";
-import { teamMembers } from "@/utils/persons";
+import presentationVideo from "@/assets/appVideo/presentationVideo.mp4";
+import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
-import { Avatar, AvatarFallback, AvatarImage } from "@radix-ui/react-avatar";
+import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog";
 import { useIsMobile } from "@/lib/utils";
+import { teamMembers } from "@/utils/persons";
+import { Avatar, AvatarFallback, AvatarImage } from "@radix-ui/react-avatar";
+import { Separator } from "@radix-ui/react-separator";
+import { CirclePlay, Cpu, Glasses, LockKeyhole, Star, WalletMinimal } from "lucide-react";
+import { useState } from "react";
 
 export function Home() {
   const isMobile = useIsMobile();
+  const [showModal, setShowModal] = useState<boolean>(false);
+
+  const handleCloseModal = () => {
+    setShowModal(false);
+  };
   return (
     <div className="container mx-auto px-4 py-8 space-y-16">
       {/* Hero Section */}
@@ -48,10 +56,25 @@ export function Home() {
               Empowering schools, teachers, and students with blockchain technology to build a
               transparent, sustainable, and innovative education system for generations to come.
             </p>
-            <Button size="lg" variant="outline" className="md:w-auto w-full">
-              <CirclePlay className="!w-5 !h-5" />
-              Play Video
-            </Button>
+            <Dialog open={showModal} onOpenChange={setShowModal}>
+              <DialogTrigger asChild>
+                <Button size="lg" variant="outline" className="md:w-auto w-full">
+                  <CirclePlay className="!w-5 !h-5" />
+                  Play Video
+                </Button>
+              </DialogTrigger>
+              <DialogContent className="max-w-[75rem]">
+                <video className="w-full pt-5" controls autoPlay>
+                  <source
+                    src={
+                      "https://teachfi.network/invideo_ai_1080_TeachFi_Revolutionizing_Education_throu_2024_11.mp4"
+                    }
+                    type="video/mp4"
+                  />
+                  Your browser does not support the video tag.
+                </video>
+              </DialogContent>
+            </Dialog>
           </div>
           <div className="flex-1">
             <img src={guySvg} alt="Hero" className="w-full" />
