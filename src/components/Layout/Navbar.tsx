@@ -20,11 +20,13 @@ const applicationItems = [
     title: "Launchpad",
     description: "The latest industry new and guides curated by our expert team.",
     icon: "📱",
+    href: "https://launchpad.teachfi.network",
   },
   {
     title: "DAO",
     description: "Learn how our customers are using Untitled UI to 10x their growth.",
     icon: "⭐",
+    href: "https://dao.teachfi.network",
   },
   {
     title: "DEX",
@@ -107,9 +109,9 @@ export const Navbar = () => {
                       <div className="space-y-2">
                         {applicationItems.map((item, index) => {
                           return (
-                            <div className="flex items-center gap-2">
+                            <div className="flex items-center gap-2" key={index}>
                               <span className="text-xl">{item.icon}</span>
-                              <ListItem href="/" title={item.title}>
+                              <ListItem href={item.href} title={item.title}>
                                 {item.description}
                               </ListItem>
                             </div>
@@ -122,35 +124,7 @@ export const Navbar = () => {
               </NavigationMenuList>
             </NavigationMenu>
           </div>
-
-          {isLoggedIn ? (
-            <div className="flex gap-2">
-              <div className="sm:flex hidden items-center gap-1">
-                <WalletMinimal className="w-4 h-4" />
-                <p>
-                  {address && address.slice(0, 5)}...
-                  {address.slice(address.length - 5, address.length)}
-                </p>
-              </div>
-              <div className="flex justify-center">
-                <Button
-                  size="sm"
-                  onClick={() => disconnectWallet()}
-                  className="!w-full !border-0 !m-0 bg-[#00394F] hover:bg-[#00394F]/90 text-white font-semibold py-2">
-                  Disconnect
-                </Button>
-              </div>
-            </div>
-          ) : (
-            <div className="flex justify-center">
-              <Button
-                size="sm"
-                onClick={() => navigate("/unlock")}
-                className="!w-full !border-0 !m-0 bg-[#00394F] hover:bg-[#00394F]/90 text-white font-semibold py-2">
-                Connect Wallet
-              </Button>
-            </div>
-          )}
+          <div className="w-20"></div>
         </div>
       </div>
     </nav>
@@ -164,6 +138,8 @@ const ListItem = React.forwardRef<React.ElementRef<"a">, React.ComponentPropsWit
         <NavigationMenuLink asChild>
           <a
             ref={ref}
+            target="_blank"
+            rel="noopener noreferrer"
             className={cn(
               "block select-none space-y-1 rounded-md p-3 leading-none no-underline outline-none transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground",
               className
