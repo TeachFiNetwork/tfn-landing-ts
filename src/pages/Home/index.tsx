@@ -297,7 +297,7 @@ export function Home() {
                       <AvatarImage
                         src={member.image}
                         alt={member.name}
-                        className="!w-[6rem] !h-[6rem]"
+                        className="!w-[6rem] !h-[6rem] rounded-full"
                       />
                       <AvatarFallback className="bg-slate-200 p-4 rounded-full">
                         {member.name

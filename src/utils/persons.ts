@@ -1,6 +1,6 @@
 import cristinaCatana from "@/assets/appImg/Team/CristinaCatana.png";
-import drDelphi from "@/assets/appImg/Team/DrDelphi.png";
-import anthonyCepileanescu from "@/assets/appImg/Team/AnthonyCepileanescu.png";
+import drDelphi from "@/assets/appImg/Team/DrDelphi.jpg";
+import anthonyCapitanescu from "@/assets/appImg/Team/AnthonyCepileanescu.png";
 import coraGabriela from "@/assets/appImg/Team/CoraGabriela.png";
 import bogdanParaschiv from "@/assets/appImg/Team/BogdanParaschiv.png";
 import alinMechenici from "@/assets/appImg/Team/AlinMechenici.png";
@@ -20,14 +20,14 @@ export const teamMembers = [
     name: "Dr Delphi",
     role: "CTO",
     description: "Entrepreneur and software developer for crypto market",
-    image: "/team/drdelphi.jpg",
+    image: drDelphi,
   },
   {
-    name: "Anthony Cepileanescu",
+    name: "Anthony Capitanescu",
     role: "CFO",
     description:
       "Graduate of a prestigious Swiss university, with 7 years of active investments in the crypto sector, focusing on developing educational program for investors.",
-    image: anthonyCepileanescu,
+    image: anthonyCapitanescu,
   },
   {
     name: "Cora Gabriela Sanda",
