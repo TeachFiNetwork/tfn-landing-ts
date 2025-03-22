@@ -1,19 +1,29 @@
-import { Button } from "@/components/ui/button";
 import logo from "@/assets/Logo.png";
-import { useNavigate } from "react-router-dom";
-import { useGetAccountInfo, useGetIsLoggedIn } from "@multiversx/sdk-dapp/hooks";
-import { logout } from "@multiversx/sdk-dapp/utils";
-import { WalletMinimal } from "lucide-react";
+import { Button } from "@/components/ui/button";
 import {
   NavigationMenu,
   NavigationMenuContent,
   NavigationMenuItem,
+  NavigationMenuLink,
   NavigationMenuList,
   NavigationMenuTrigger,
-  NavigationMenuLink,
 } from "@/components/ui/navigation-menu";
-import React from "react";
 import { cn } from "@/lib/utils";
+import { useGetAccountInfo, useGetIsLoggedIn } from "@multiversx/sdk-dapp/hooks";
+import { logout } from "@multiversx/sdk-dapp/utils";
+import { DropdownMenu } from "@radix-ui/react-dropdown-menu";
+import React from "react";
+import { useNavigate } from "react-router-dom";
+import {
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuPortal,
+  DropdownMenuSub,
+  DropdownMenuSubContent,
+  DropdownMenuSubTrigger,
+  DropdownMenuTrigger,
+} from "../ui/dropdown-menu";
+import { Menu } from "lucide-react";
 
 const applicationItems = [
   {
@@ -46,21 +56,13 @@ const applicationItems = [
 ];
 
 export const Navbar = () => {
-  const isLoggedIn = useGetIsLoggedIn();
-  const { address } = useGetAccountInfo();
-  const navigate = useNavigate();
-
-  const disconnectWallet = () => {
-    logout("/").then(() => window.location.reload());
-  };
-
   const navItems = [
     { label: "Home", href: "/" },
     { label: "Vision", href: "#vision" },
     { label: "Statistics", href: "#impact" },
     { label: "Partners", href: "#partners" },
     { label: "Team", href: "#team" },
-    { label: "About", href: "#about" },
+    // { label: "About", href: "#about" },
     { label: "Applications", href: "#applications" },
   ];
 
@@ -101,7 +103,7 @@ export const Navbar = () => {
             <NavigationMenu className="hidden md:flex">
               <NavigationMenuList>
                 <NavigationMenuItem>
-                  <NavigationMenuTrigger className="text-sm font-medium text-slate-600">
+                  <NavigationMenuTrigger className="text-sm font-medium bg-transparent text-slate-600">
                     Applications
                   </NavigationMenuTrigger>
                   <NavigationMenuContent>
@@ -124,7 +126,57 @@ export const Navbar = () => {
               </NavigationMenuList>
             </NavigationMenu>
           </div>
-          <div className="w-20"></div>
+          <div className="w-0 md:w-20"></div>
+          <DropdownMenu>
+            <DropdownMenuTrigger>
+              <Button size="sm" variant="outline" className="md:hidden flex ">
+                <Menu />
+              </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent>
+              {navItems.slice(0, -1).map((item, index) => (
+                <DropdownMenuItem key={index}>
+                  <a
+                    href={item.href}
+                    onClick={(e) => {
+                      if (item.href !== "/") {
+                        e.preventDefault();
+                        scrollToSection(item.href);
+                      }
+                    }}
+                    className="text-sm font-medium transition-colors hover:text-teal-600 text-slate-600 px-4 py-2">
+                    {item.label}
+                  </a>
+                </DropdownMenuItem>
+              ))}
+              <DropdownMenuSub>
+                <DropdownMenuSubTrigger className="text-sm font-medium transition-colors hover:text-teal-600 text-slate-600 py-2 pl-6">
+                  Applications
+                </DropdownMenuSubTrigger>
+                <DropdownMenuPortal>
+                  <DropdownMenuSubContent>
+                    {applicationItems.map((item, index) => {
+                      return (
+                        <div className="flex items-center gap-2" key={index}>
+                          <span className="text-xl">{item.icon}</span>
+                          <a
+                            target="_blank"
+                            href={item.href}
+                            rel="noopener noreferrer"
+                            className={cn(
+                              "block select-none space-y-1 rounded-md p-3 leading-none no-underline outline-none transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground"
+                            )}>
+                            <DropdownMenuItem>{item.title}</DropdownMenuItem>
+                          </a>
+                          {/* </ListItem> */}
+                        </div>
+                      );
+                    })}
+                  </DropdownMenuSubContent>
+                </DropdownMenuPortal>
+              </DropdownMenuSub>
+            </DropdownMenuContent>
+          </DropdownMenu>
         </div>
       </div>
     </nav>
